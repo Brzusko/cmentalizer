@@ -1,5 +1,6 @@
 mod example;
 mod addons;
+mod ui;
 
 use godot::prelude::*;
 
