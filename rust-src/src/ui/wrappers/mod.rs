@@ -1,1 +1,1 @@
-mod regex_line_edit_wrapper;
+pub(crate)  mod regex_line_edit_wrapper;

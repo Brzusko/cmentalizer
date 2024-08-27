@@ -1,3 +1,11 @@
 [gd_scene format=3 uid="uid://b5t2s5npkujhp"]
 
-[node name="MultiClientControl" type="HBoxContainer"]
+[node name="MultiClientControl" type="MainMultiClientUI" node_paths=PackedStringArray("clients_line_edit", "spawn_btn")]
+clients_line_edit = NodePath("LineEdit")
+spawn_btn = NodePath("Button")
+
+[node name="LineEdit" type="LineEdit" parent="."]
+layout_mode = 2
+
+[node name="Button" type="Button" parent="."]
+layout_mode = 2
