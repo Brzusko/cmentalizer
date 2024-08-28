@@ -1,3 +1,4 @@
+use std::sync::Mutex;
 use godot::prelude::*;
 use godot::classes::{Button, HBoxContainer, IHBoxContainer, LineEdit};
 use crate::ui::wrappers::regex_line_edit_wrapper::RegexLineEditWrapper;
@@ -25,5 +26,19 @@ impl IHBoxContainer for MainMultiClientUI
         let mut wrapper = RegexLineEditWrapper::construct(line_edit, REGEX_PATTERN);
         wrapper.bind_mut().bind_events();
         self.regex_line_edit_wrapper = Some(wrapper);
+        let mut button = self.spawn_btn.take().unwrap();
+        let callback = self.base().callable("on_btn_clicked");
+        button.connect(StringName::from("clicked"), callback);
+        self.spawn_btn = Some(button);
+    }
+}
+
+#[godot_api]
+impl MainMultiClientUI
+{
+    #[func]
+    fn on_btn_clicked(&mut self)
+    {
+        todo!()
     }
 }
