@@ -3,7 +3,7 @@ use godot::prelude::*;
 use godot::classes::{Button, HBoxContainer, IHBoxContainer, LineEdit};
 use crate::ui::wrappers::regex_line_edit_wrapper::RegexLineEditWrapper;
 
-static REGEX_PATTERN: &str = r"";
+static REGEX_PATTERN: &str = r"^-?\d+$";
 
 #[derive(GodotClass)]
 #[class(base = HBoxContainer, init, tool)]
@@ -28,7 +28,7 @@ impl IHBoxContainer for MainMultiClientUI
         self.regex_line_edit_wrapper = Some(wrapper);
         let mut button = self.spawn_btn.take().unwrap();
         let callback = self.base().callable("on_btn_clicked");
-        button.connect(StringName::from("clicked"), callback);
+        button.connect(StringName::from("pressed"), callback);
         self.spawn_btn = Some(button);
     }
 }

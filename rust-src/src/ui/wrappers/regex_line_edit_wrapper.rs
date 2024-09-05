@@ -8,7 +8,9 @@ pub(crate) struct RegexLineEditWrapper
 {
     base: Base<Object>,
     line_edit: Option<Gd<LineEdit>>,
-    reg_ex: Option<Gd<RegEx>>
+    reg_ex: Option<Gd<RegEx>>,
+    cached_value: GString,
+    caret_pos: i32,
 }
 
 
@@ -22,6 +24,8 @@ impl RegexLineEditWrapper
                 base,
                 line_edit,
                 reg_ex: Some(reg_ex),
+                cached_value: GString::from(""),
+                caret_pos: 0,
             };
             
             return new_instance;
@@ -55,6 +59,30 @@ impl RegexLineEditWrapper {
     #[func]
     fn on_text_changed(&mut self, new_value: GString)
     {
-        godot_print!("Test");
+        if new_value.is_empty()
+        { 
+            self.cached_value = new_value;
+            self.caret_pos = 0;
+            return;
+        }
+        
+        let reg_ex = self.reg_ex.take().unwrap();
+        let cloned_value = new_value.clone();
+        let mut line_edit = self.line_edit.take().unwrap();
+        
+        if reg_ex.search(cloned_value).is_some() 
+        {
+            self.cached_value = new_value;
+            self.caret_pos = line_edit.get_caret_column();
+        }
+        else 
+        {
+            let cloned_cache = self.cached_value.clone();
+            line_edit.set_text(cloned_cache);
+            line_edit.set_caret_column(self.caret_pos);
+        }
+        
+        self.reg_ex = Some(reg_ex);
+        self.line_edit = Some(line_edit);
     }
 }
