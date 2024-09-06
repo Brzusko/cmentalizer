@@ -3,7 +3,7 @@ use godot::classes::{LineEdit, Object, RegEx};
 use godot::private::callbacks;
 
 #[derive(GodotClass)]
-#[class(base = Object, no_init, tool)]
+#[class(base = Object, init, tool)]
 pub(crate) struct RegexLineEditWrapper 
 {
     base: Base<Object>,
@@ -66,9 +66,9 @@ impl RegexLineEditWrapper {
             return;
         }
         
-        let reg_ex = self.reg_ex.take().unwrap();
+        let reg_ex = self.reg_ex.as_ref().unwrap();
         let cloned_value = new_value.clone();
-        let mut line_edit = self.line_edit.take().unwrap();
+        let mut line_edit = self.line_edit.as_mut().unwrap();
         
         if reg_ex.search(cloned_value).is_some() 
         {
@@ -81,8 +81,11 @@ impl RegexLineEditWrapper {
             line_edit.set_text(cloned_cache);
             line_edit.set_caret_column(self.caret_pos);
         }
-        
-        self.reg_ex = Some(reg_ex);
-        self.line_edit = Some(line_edit);
+    }
+    
+    #[func]
+    pub fn dispose(&mut self) -> Option<Gd<LineEdit>>
+    {
+        self.line_edit.take()
     }
 }

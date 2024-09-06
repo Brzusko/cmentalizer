@@ -22,14 +22,29 @@ impl IHBoxContainer for MainMultiClientUI
 {
     fn ready(&mut self)
     {
-        let line_edit = self.clients_line_edit.take();
-        let mut wrapper = RegexLineEditWrapper::construct(line_edit, REGEX_PATTERN);
+        if self.clients_line_edit.is_none()
+        {
+            return;
+        }
+        
+        let line_edit = self.clients_line_edit.take().unwrap();
+        let mut wrapper = RegexLineEditWrapper::construct(Some(line_edit), REGEX_PATTERN);
         wrapper.bind_mut().bind_events();
         self.regex_line_edit_wrapper = Some(wrapper);
         let mut button = self.spawn_btn.take().unwrap();
         let callback = self.base().callable("on_btn_clicked");
         button.connect(StringName::from("pressed"), callback);
         self.spawn_btn = Some(button);
+    }
+
+    fn exit_tree(&mut self) {
+        if self.regex_line_edit_wrapper.is_none() { return; }
+
+        let mut wrapper = self.regex_line_edit_wrapper.take().unwrap();
+        let line_edit = wrapper.bind_mut().dispose();
+        self.clients_line_edit = line_edit;
+        wrapper.free();
+        godot_print!("Free1233");
     }
 }
 
