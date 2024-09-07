@@ -45,11 +45,10 @@ impl RegexLineEditWrapper
         self.line_edit = Some(line_edit);
     }
     
-    pub fn get_text(&mut self) -> GString
+    pub fn get_text(& self) -> GString
     {
-        let line_edit = self.line_edit.take().unwrap();
+        let line_edit = self.line_edit.as_ref().unwrap();
         let text = line_edit.get_text();
-        self.line_edit = Some(line_edit);
         return text;
     }
 }
