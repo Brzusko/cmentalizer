@@ -44,7 +44,7 @@ impl IHBoxContainer for MainMultiClientUI
         let line_edit = wrapper.bind_mut().dispose();
         self.clients_line_edit = line_edit;
         wrapper.free();
-        godot_print!("Free1233");
+        godot_print!("Free123");
     }
 }
 
