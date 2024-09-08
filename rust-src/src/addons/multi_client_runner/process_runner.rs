@@ -47,13 +47,6 @@ struct ProcessContainer
     process_vector: Vec<Process>
 }
 
-trait ProcessCollection
-{
-    fn is_any_process_running(&self) -> bool;
-    fn add_process(&mut self);
-    fn clear(&mut self);
-}
-
 impl ProcessContainer {
     pub fn new() -> Self
     {
@@ -92,7 +85,7 @@ pub(crate) trait ProcessRunner
     fn can_run(&self) -> bool;
 }
 
-struct WindowsProcessRunner
+pub(crate) struct WindowsProcessRunner
 {
     os: Gd<Os>,
     process_container: ProcessContainer,
@@ -111,7 +104,7 @@ impl WindowsProcessRunner
 
 impl OsGetter for WindowsProcessRunner {}
 
-struct MacOSProcessRunner
+pub(crate) struct MacOSProcessRunner
 {
     os: Gd<Os>,
     process_container: ProcessContainer,
@@ -119,9 +112,12 @@ struct MacOSProcessRunner
 
 impl ProcessRunner for WindowsProcessRunner 
 {
-    fn create_new_process(&mut self, path: GString, args: PackedStringArray) 
+    fn create_new_process(&mut self, _path: GString, args: PackedStringArray) 
     {
-        todo!()
+        let process_id = self.os.create_instance(args);
+        if process_id == -1 { return; }
+        let process = Process::new(process_id);
+        self.process_container.add_process(process);
     }
 
     fn kill_processes(&mut self) 

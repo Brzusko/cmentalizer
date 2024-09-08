@@ -1,6 +1,5 @@
 use godot::prelude::*;
 use godot::classes::{LineEdit, Object, RegEx};
-use godot::private::callbacks;
 
 #[derive(GodotClass)]
 #[class(base = Object, init, tool)]
@@ -36,7 +35,7 @@ impl RegexLineEditWrapper
     {
         let callback;
         {
-            let mut mutable_base = self.base_mut();
+            let mutable_base = self.base_mut();
             callback = mutable_base.callable("on_text_changed");   
         }
         
@@ -67,7 +66,7 @@ impl RegexLineEditWrapper {
         
         let reg_ex = self.reg_ex.as_ref().unwrap();
         let cloned_value = new_value.clone();
-        let mut line_edit = self.line_edit.as_mut().unwrap();
+        let line_edit = self.line_edit.as_mut().unwrap();
         
         if reg_ex.search(cloned_value).is_some() 
         {

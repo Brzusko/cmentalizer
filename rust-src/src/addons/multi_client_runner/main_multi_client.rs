@@ -4,7 +4,7 @@ use godot::classes::{Control, EditorPlugin, IEditorPlugin};
 static CONTROL_SCENE_PATH: &str = "res://addons/multi_client/scenes/MultiClientControl.tscn";
 
 #[derive(GodotClass)]
-#[class(base = EditorPlugin, editor_plugin, init, tool)]
+#[class(base = EditorPlugin, init, tool)]
 struct MultiClientRunnerMain
 {
     base: Base<EditorPlugin>,
@@ -21,7 +21,7 @@ impl IEditorPlugin for MultiClientRunnerMain
         match packed_scene_result 
         {
             Ok(scene) => { instance = scene.try_instantiate_as::<Control>(); }
-            Err(error) => { godot_print!("Could not create multi-client-window"); return; }
+            Err(_) => { godot_print!("Could not create multi-client-window"); return; }
         }
         
         let control = instance.unwrap();
@@ -36,7 +36,7 @@ impl IEditorPlugin for MultiClientRunnerMain
             return;
         }
         
-        let mut control = self.main_control.take().unwrap();
+        let control = self.main_control.take().unwrap();
         self.base_mut().remove_control_from_bottom_panel(&control);
         control.free();
     }

@@ -1,4 +1,3 @@
-mod example;
 mod addons;
 mod ui;
 

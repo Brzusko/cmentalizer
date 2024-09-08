@@ -1,6 +1,3 @@
-use std::cmp::PartialEq;
-use std::sync::Mutex;
-use std::thread::spawn;
 use godot::prelude::*;
 use godot::classes::{Button, HBoxContainer, IHBoxContainer, LineEdit, Os};
 use crate::addons::multi_client_runner::process_runner::{PlatformRunner, ProcessRunner};
@@ -40,8 +37,8 @@ impl IHBoxContainer for MainMultiClientUI
         {
             let spawn_btn_callback = self.base().callable("on_spawn_btn_clicked");
             let close_btn_callback = self.base().callable("on_close_btn_clicked");
-            let mut close_button = self.close_btn.as_mut().unwrap();
-            let mut spawn_button = self.spawn_btn.as_mut().unwrap();
+            let close_button = self.close_btn.as_mut().unwrap();
+            let spawn_button = self.spawn_btn.as_mut().unwrap();
             close_button.connect(StringName::from("pressed"), close_btn_callback);
             spawn_button.connect(StringName::from("pressed"), spawn_btn_callback);
         }
@@ -52,7 +49,7 @@ impl IHBoxContainer for MainMultiClientUI
     fn exit_tree(&mut self) {
         if self.regex_line_edit_wrapper.is_none() { return; }
 
-        let mut wrapper = self.regex_line_edit_wrapper.take().unwrap();
+        let wrapper = self.regex_line_edit_wrapper.take().unwrap();
         wrapper.free();
         
         self.process_runner.kill_processes();
