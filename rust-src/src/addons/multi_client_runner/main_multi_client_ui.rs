@@ -1,4 +1,6 @@
 use std::cmp::PartialEq;
+use std::sync::Mutex;
+use std::thread::spawn;
 use godot::prelude::*;
 use godot::classes::{Button, HBoxContainer, IHBoxContainer, LineEdit, Os};
 use crate::addons::multi_client_runner::process_runner::{PlatformRunner, ProcessRunner};
@@ -15,6 +17,8 @@ struct MainMultiClientUI
     clients_line_edit: Option<Gd<LineEdit>>,
     #[export]
     spawn_btn: Option<Gd<Button>>,
+    #[export]
+    close_btn: Option<Gd<Button>>,
     regex_line_edit_wrapper: Option<Gd<RegexLineEditWrapper>>,
     process_runner: PlatformRunner,
 }
@@ -32,15 +36,14 @@ impl IHBoxContainer for MainMultiClientUI
         let mut wrapper = RegexLineEditWrapper::construct(Some(self.clients_line_edit.as_ref().unwrap().clone()), REGEX_PATTERN);
         wrapper.bind_mut().bind_events();
         self.regex_line_edit_wrapper = Some(wrapper);
-        
-        let callback;
-        {
-            callback = self.base().callable("on_btn_clicked");
-        }
 
         {
-            let mut button = self.spawn_btn.as_mut().unwrap();
-            button.connect(StringName::from("pressed"), callback);
+            let spawn_btn_callback = self.base().callable("on_spawn_btn_clicked");
+            let close_btn_callback = self.base().callable("on_close_btn_clicked");
+            let mut close_button = self.close_btn.as_mut().unwrap();
+            let mut spawn_button = self.spawn_btn.as_mut().unwrap();
+            close_button.connect(StringName::from("pressed"), close_btn_callback);
+            spawn_button.connect(StringName::from("pressed"), spawn_btn_callback);
         }
         
         self.process_runner = PlatformRunner::get_runner_for_platform();
@@ -60,19 +63,26 @@ impl IHBoxContainer for MainMultiClientUI
 impl MainMultiClientUI
 {
     #[func]
-    fn on_btn_clicked(&mut self)
+    fn on_spawn_btn_clicked(&mut self)
     {
-        if let PlatformRunner::UnSupported = self.process_runner 
-        {
-            godot_warn!("Trying to spawn process on unsupported platform!");
-            return;
-        }
+        if !self.process_runner.can_run() { return; }
         
         let clients_count = self.get_clients_count();
         
         if clients_count == 0 { return; }
         let os = Os::singleton();
-        self.process_runner.create_new_process(os.get_executable_path(), PackedStringArray::new());
+        
+        godot_print!("Spawning {:?} clients", clients_count);
+        for _ in 0..clients_count 
+        {
+            self.process_runner.create_new_process(os.get_executable_path(), PackedStringArray::new());
+        }
+    }
+    
+    #[func]
+    fn on_close_btn_clicked(&mut self)
+    {
+        self.process_runner.kill_processes();
     }
     
     fn get_clients_count(&self) -> i32

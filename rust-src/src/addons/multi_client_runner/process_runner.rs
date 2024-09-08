@@ -19,7 +19,7 @@ impl Process
 {
     pub fn new(pid: i32) -> Self
     {
-        assert_eq!(pid, 0);
+        assert_ne!(pid, 0);
         
         Self {
             os_singleton: Self::get_os_singleton(),
@@ -89,6 +89,7 @@ pub(crate) trait ProcessRunner
 {
     fn create_new_process(&mut self, path: GString, args: PackedStringArray);
     fn kill_processes(&mut self);
+    fn can_run(&self) -> bool;
 }
 
 struct WindowsProcessRunner
@@ -127,6 +128,11 @@ impl ProcessRunner for WindowsProcessRunner
     {
         self.process_container.clear();
     }
+
+    fn can_run(&self) -> bool 
+    {
+        return !self.process_container.is_any_process_running();
+    }
 }
 
 impl MacOSProcessRunner 
@@ -145,12 +151,21 @@ impl ProcessRunner for MacOSProcessRunner
 {
     fn create_new_process(&mut self, path: GString, args: PackedStringArray)
     {
-        todo!()
+        let process_id = self.os.create_process(path, args);
+        if process_id == -1 { return; }
+        
+        let process = Process::new(process_id);
+        self.process_container.add_process(process);
     }
 
     fn kill_processes(&mut self) 
     {
         self.process_container.clear();    
+    }
+
+    fn can_run(&self) -> bool
+    {
+        return !self.process_container.is_any_process_running();
     }
 }
 
@@ -202,6 +217,15 @@ impl ProcessRunner for PlatformRunner
             PlatformRunner::WindowsRunner(runner) => runner.kill_processes(),
             PlatformRunner::MacOSRunner(runner) => runner.kill_processes(),
             PlatformRunner::UnSupported => panic!("Unsupported platform"),
+        }
+    }
+
+    fn can_run(&self) -> bool 
+    {
+        match self {
+            PlatformRunner::WindowsRunner(runner) => { return runner.can_run() },
+            PlatformRunner::MacOSRunner(runner) => { runner.can_run() },
+            PlatformRunner::UnSupported => { panic!("Unsupported platform") },
         }
     }
 }

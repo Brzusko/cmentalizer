@@ -1,12 +1,21 @@
 [gd_scene format=3 uid="uid://b5t2s5npkujhp"]
 
-[node name="MultiClientControl" type="MainMultiClientUI" node_paths=PackedStringArray("clients_line_edit", "spawn_btn")]
+[node name="MultiClientControl" type="MainMultiClientUI" node_paths=PackedStringArray("clients_line_edit", "spawn_btn", "close_btn")]
 clients_line_edit = NodePath("LineEdit")
-spawn_btn = NodePath("Button")
+spawn_btn = NodePath("SpawnButton")
+close_btn = NodePath("CloseButton")
 
 [node name="LineEdit" type="LineEdit" parent="."]
 layout_mode = 2
 
-[node name="Button" type="Button" parent="."]
+[node name="SpawnButton" type="Button" parent="."]
 layout_mode = 2
 text = "Spawn"
+
+[node name="Separator" type="Control" parent="."]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="CloseButton" type="Button" parent="."]
+layout_mode = 2
+text = "Close"
