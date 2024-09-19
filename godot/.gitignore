@@ -1,7 +1,5 @@
 # Godot 4+ specific ignores
 .godot/
-# Godot 4+ specific ignores
-.godot/
 
 # Godot-specific ignores
 .import/
@@ -14,3 +12,11 @@ export.cfg
 .mono/
 data_*/
 mono_crash.*.json
+
+# Rust output
+
+# Windows builds
+libs/win64
+
+# MacOS universal
+libs/macOS_64
