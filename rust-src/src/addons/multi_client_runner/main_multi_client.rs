@@ -18,7 +18,7 @@ impl IEditorPlugin for MultiClientRunnerMain
         let packed_scene_result = try_load::<PackedScene>(GString::from(CONTROL_SCENE_PATH));
         let instance: Option<Gd<Control>>;
         
-        match packed_scene_result 
+        match packed_scene_result
         {
             Ok(scene) => { instance = scene.try_instantiate_as::<Control>(); }
             Err(_) => { godot_print!("Could not create multi-client-window"); return; }
