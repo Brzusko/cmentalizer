@@ -1,3 +1,4 @@
+use std::cell::RefCell;
 use std::ptr;
 use std::rc::{Rc, Weak};
 use anyhow::anyhow;
@@ -56,7 +57,7 @@ pub(crate) struct NetworkEntryPoint
 {
     base: Base<Node>,
     pending_construct_listener: Option<Weak<dyn NetworkConstructListener>>,
-    network_mode: Option<Rc<NetworkMode>>,
+    network_mode: Option<Rc<RefCell<NetworkMode>>>,
 }
 
 #[godot_api]
@@ -94,13 +95,16 @@ impl NetworkEntryPoint
             }
         };
         
-        self.network_mode = Some(Rc::new(network_mode));
-        let network_mode = Rc::clone(self.network_mode.as_ref().unwrap());
-        let ptr = self.base().clone().cast::<NetworkEntryPoint>();
+        self.network_mode = Some(Rc::new(RefCell::new(network_mode)));
         
-        match &*network_mode {
-            NetworkMode::ENetLocal(mut mode) => { mode.bind_mut().construct(ptr); }
-            NetworkMode::ENetRemote(mut mode) => {}
+        let network_mode = self.network_mode.as_mut().unwrap();
+        let network_mode_rc = Rc::clone(network_mode);
+        let mut network_mode_refcell = network_mode_rc.borrow_mut();
+        let gd_ptr = self.base().clone().cast::<NetworkEntryPoint>();
+        
+        match *network_mode_refcell {
+            NetworkMode::ENetLocal(ref mut mode) => { mode.bind_mut().construct(gd_ptr); }
+            NetworkMode::ENetRemote(ref mut mode) => { mode.bind_mut().construct(gd_ptr); }
         }
     }
     

@@ -10,7 +10,7 @@ pub(crate) struct ENetListener
 
 impl Constructor for ENetListener
 {
-    fn construct(&mut self, mut entry_point: ()) 
+    fn construct(&mut self, mut entry_point: Gd<NetworkEntryPoint>) 
     {
         entry_point.bind_mut().construct_result(ConnectionResponse::Success);
     }
