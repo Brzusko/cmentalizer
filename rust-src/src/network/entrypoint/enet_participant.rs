@@ -1,16 +1,9 @@
 use std::rc::Weak;
 use godot::prelude::*;
-use crate::network::entrypoint::network_entry_point::{ConnectionResponse, Constructor, NetworkEntryPoint};
+use crate::network::entrypoint::network_entry_point::{NetworkEntryPoint};
 
 #[derive(GodotClass)]
 #[class(base = Node, init)]
 pub(crate) struct ENetParticipant
 {
-}
-
-impl Constructor for ENetParticipant {
-    fn construct(&mut self, mut entry_point: Gd<NetworkEntryPoint>) 
-    {
-        entry_point.bind_mut().construct_result(ConnectionResponse::Success);    
-    }
 }

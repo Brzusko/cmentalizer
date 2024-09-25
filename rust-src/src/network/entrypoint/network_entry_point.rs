@@ -1,53 +1,59 @@
 use std::cell::RefCell;
-use std::ptr;
 use std::rc::{Rc, Weak};
-use anyhow::anyhow;
 use godot::prelude::*;
-use godot::classes::{ENetMultiplayerPeer, INode, Node};
+use godot::classes::{INode, Node};
 use crate::network::entrypoint::enet_listener::ENetListener;
 use crate::network::entrypoint::enet_participant::ENetParticipant;
-use crate::network::entrypoint::network_entry_point::Transport::ENetLocal;
 // Creation flow
 // Struct A Wants to create NetworkPoint from NetworkEntryPoint
 // Gives somehow reference to method via smart pointer
 // When NetworkPoint is created, reference
 
-pub(crate) trait NetworkConstructListener
+pub(crate) enum WhichTransport
 {
-    fn construct_result(&self, result: anyhow::Result<Weak<NetworkMode>>);
-}
-
-pub(crate) trait Listener {}
-pub(crate) trait Participant {}
-pub(crate) trait Constructor 
-{
-    fn construct(&mut self, entry_point: Gd<NetworkEntryPoint>);   
+    // MaxClients
+    ENetListener(i32),
+    // Server socket address - ipv4/ipv6
+    ENetParticipant(GString),
 }
 
 pub(crate) enum NetworkMode
 {
-    ENetLocal(Gd<ENetListener>),
-    ENetRemote(Gd<ENetParticipant>),
+    ENetListener(Gd<ENetListener>),
+    ENetParticipant(Gd<ENetParticipant>),
 }
 
-pub(crate) enum Transport
-{
-    // MaxClients -> i32    
-    ENetLocal,
-    // Address -> GString
-    ENetRemote,
-}
-
-pub(crate) struct BasicTransportOptions
+pub(crate) struct CommonTransportOptions
 {
     port: i32,
-    channels: i32,
+    channels_count: i32,
+    transport: WhichTransport,
 }
 
-pub(crate) enum ConnectionResponse
+impl CommonTransportOptions
 {
-    Success,
-    Error,
+    fn new(port: i32, channels_count: i32, transport: WhichTransport) -> Self
+    {
+        Self
+        {
+            port,
+            channels_count,
+            transport
+        }
+    }
+}
+
+pub(crate) trait NetworkConstructListener
+{
+    fn construct_result(&mut self, result: anyhow::Result<Weak<RefCell<NetworkMode>>>);
+}
+
+pub(crate) trait NetworkListener {}
+pub(crate) trait NetworkParticipant {}
+
+pub(crate) trait NetworkConstruct
+{
+    fn construct(&mut self, network_entry_point: Gd<NetworkEntryPoint>);
 }
 
 // Refactor as Engine Singleton later
@@ -56,69 +62,18 @@ pub(crate) enum ConnectionResponse
 pub(crate) struct NetworkEntryPoint
 {
     base: Base<Node>,
-    pending_construct_listener: Option<Weak<dyn NetworkConstructListener>>,
-    network_mode: Option<Rc<RefCell<NetworkMode>>>,
-}
-
-#[godot_api]
-impl INode for NetworkEntryPoint
-{
+    network_mode_ptr: Option<Rc<NetworkMode>>,
+    construct_listener_ptr: Option<Rc<RefCell<dyn NetworkConstructListener>>>,
 }
 
 impl NetworkEntryPoint
 {
-    pub(crate) fn construct_entry_point(&mut self, listener_ptr: Weak<dyn NetworkConstructListener>, transport: Transport, basic_transport_options: BasicTransportOptions)
+    pub(crate) fn construct(&mut self, listener: Rc<RefCell<dyn NetworkConstructListener>>)
     {
-        let ptr = listener_ptr.upgrade();
-        if ptr.is_none() { return; }
-        
-        let ptr = ptr.unwrap();
-        
-        if self.pending_construct_listener.is_some() || self.network_mode.is_some()
-        {
-            ptr.construct_result(Err(anyhow!("Pending net creation or is created")));
-            return;
-        }
-        
-        self.pending_construct_listener = Some(listener_ptr);
-        
-        let network_mode = match transport {
-            Transport::ENetRemote => {
-                let instance = ENetParticipant::new_alloc();
-                let base = self.base_mut().add_child(&instance);
-                NetworkMode::ENetRemote(instance)
-            }
-            Transport::ENetLocal => {
-                let instance = ENetListener::new_alloc();
-                let base = self.base_mut().add_child(&instance);
-                NetworkMode::ENetLocal(instance)
-            }
-        };
-        
-        self.network_mode = Some(Rc::new(RefCell::new(network_mode)));
-        
-        let network_mode = self.network_mode.as_mut().unwrap();
-        let network_mode_rc = Rc::clone(network_mode);
-        let mut network_mode_refcell = network_mode_rc.borrow_mut();
-        let gd_ptr = self.base().clone().cast::<NetworkEntryPoint>();
-        
-        match *network_mode_refcell {
-            NetworkMode::ENetLocal(ref mut mode) => { mode.bind_mut().construct(gd_ptr); }
-            NetworkMode::ENetRemote(ref mut mode) => { mode.bind_mut().construct(gd_ptr); }
-        }
+
     }
-    
-    pub(crate) fn construct_result(&mut self, connection_response: ConnectionResponse)
-    {
-        match connection_response 
-        {
-            ConnectionResponse::Success => {
-                
-            }
-            
-            ConnectionResponse::Error => {
-                
-            }
-        }
+
+    pub(crate) fn construct_result(&mut self) {
+
     }
 }
