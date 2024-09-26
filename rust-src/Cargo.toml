@@ -9,3 +9,7 @@ crate-type = ["cdylib"]
 [dependencies]
 godot = { git = "https://github.com/godot-rust/gdext", branch = "master" }
 anyhow = { version = "1.0", default-features = false }
+thiserror = "1.0"
+
+[rust]
+debug=true
