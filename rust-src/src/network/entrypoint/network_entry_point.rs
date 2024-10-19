@@ -11,7 +11,7 @@ pub(crate) struct NetworkEntryPoint
 }
 
 #[godot_api]
-impl INode for NetworkEntryPoint 
+impl IObject for NetworkEntryPoint 
 {
 }
 
