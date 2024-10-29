@@ -18,3 +18,4 @@ config/icon="res://icon.svg"
 [autoload]
 
 NetworkEntry="*res://scenes/autoloads/network/network_entry.tscn"
+NetworkWindow="*res://scenes/autoloads/network_window/network_window_canvas.tscn"
