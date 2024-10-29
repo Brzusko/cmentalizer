@@ -1,12 +1,13 @@
 use godot::prelude::*;
 use godot::classes::{INode, Node};
+use crate::network::entrypoint::enet_client::{ENetClientArgs, ENetClient};
 use crate::network::entrypoint::enet_host::{ENetHostArgs, ENetHost};
 
 pub(crate) trait NetworkConstructor<T>
 where
     T: Inherits<RefCounted>
 {
-    fn construct(&mut self, args: Gd<T>);
+    fn construct(&mut self, args: Gd<T>) -> bool;
 }
 
 pub(crate) trait NetworkConstructConsumer<T>
@@ -76,7 +77,9 @@ impl NetworkEntryPoint
                     .is_ok_and(|node| node.bind().is_initialized())
             },
             NetworkTransport::ENetClient => {
-                todo!()
+                network_node_ptr
+                    .try_cast::<ENetClient>()
+                    .is_ok_and(|node| node.bind().is_initialized())
             },
         }
     }
@@ -86,11 +89,17 @@ impl NetworkEntryPoint
     {
         self.construct(args);
     }
+
+    #[func]
+    pub fn create_enet_client(&mut self, args: Gd<ENetClientArgs>)
+    {
+        self.construct(args);
+    }
 }
 
 impl NetworkConstructor<ENetHostArgs> for NetworkEntryPoint
 {
-    fn construct(&mut self, args: Gd<ENetHostArgs>)
+    fn construct(&mut self, args: Gd<ENetHostArgs>) -> bool
     {
         let mut enet_host_node = ENetHost::new_alloc();
         self.base_mut().add_child(&enet_host_node);
@@ -105,10 +114,37 @@ impl NetworkConstructor<ENetHostArgs> for NetworkEntryPoint
         {
             self.base_mut().remove_child(&enet_host_node);
             enet_host_node.queue_free();
-            return;
+            return false;
         }
 
         self.network_node = Some(enet_host_node.upcast());
         self.network_transport_type = NetworkTransport::ENetHost;
+        return true;
+    }
+}
+
+impl NetworkConstructor<ENetClientArgs> for NetworkEntryPoint
+{
+    fn construct(&mut self, args: Gd<ENetClientArgs>) -> bool
+    {
+        let mut enet_client_node = ENetClient::new_alloc();
+        self.base_mut().add_child(&enet_client_node);
+        enet_client_node.set_name(GString::from("Network"));
+
+        let is_created;
+        {
+            let mut enet_client_bound = enet_client_node.bind_mut();
+            is_created = enet_client_bound.consume_args(args);
+        }
+
+        if !is_created
+        {
+            self.base_mut().remove_child(enet_client_node);
+            return false;
+        }
+
+        self.network_transport_type = NetworkTransport::ENetClient;
+        self.network_node = Some(enet_client_node.upcast());
+        return true;
     }
 }
