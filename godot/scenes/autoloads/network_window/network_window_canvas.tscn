@@ -51,6 +51,6 @@ layout_mode = 2
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="Label" type="Label" parent="MainNetworkDebug/PanelContainer/MarginContainer/ContentContainer/StatusWindow"]
+[node name="StatusLabel" type="Label" parent="MainNetworkDebug/PanelContainer/MarginContainer/ContentContainer/StatusWindow"]
 layout_mode = 2
 text = "Status"
