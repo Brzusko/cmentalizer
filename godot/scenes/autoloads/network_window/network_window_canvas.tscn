@@ -1,0 +1,56 @@
+[gd_scene load_steps=2 format=3 uid="uid://cl4d11by084jt"]
+
+[ext_resource type="Script" path="res://scripts/autoloads/network_window/network_window_center.gd" id="1_wkatr"]
+
+[node name="NetworkWindowCanvas" type="CanvasLayer"]
+script = ExtResource("1_wkatr")
+
+[node name="MainNetworkDebug" type="MarginContainer" parent="."]
+anchors_preset = -1
+anchor_left = 0.818
+anchor_right = 1.0
+offset_left = -0.335999
+offset_bottom = 645.0
+grow_horizontal = 0
+theme_override_constants/margin_left = 15
+theme_override_constants/margin_top = 15
+theme_override_constants/margin_right = 15
+theme_override_constants/margin_bottom = 15
+
+[node name="PanelContainer" type="PanelContainer" parent="MainNetworkDebug"]
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="MainNetworkDebug/PanelContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="ContentContainer" type="VBoxContainer" parent="MainNetworkDebug/PanelContainer/MarginContainer"]
+layout_mode = 2
+
+[node name="ConnectOptions" type="TabBar" parent="MainNetworkDebug/PanelContainer/MarginContainer/ContentContainer"]
+layout_mode = 2
+current_tab = 0
+tab_count = 2
+tab_0/title = "Host"
+tab_1/title = "Client"
+
+[node name="TitleContainer" type="VBoxContainer" parent="MainNetworkDebug/PanelContainer/MarginContainer/ContentContainer"]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="MainNetworkDebug/PanelContainer/MarginContainer/ContentContainer/TitleContainer"]
+layout_mode = 2
+text = "Network Window"
+
+[node name="HSeparator" type="HSeparator" parent="MainNetworkDebug/PanelContainer/MarginContainer/ContentContainer/TitleContainer"]
+layout_mode = 2
+
+[node name="StatusWindow" type="CenterContainer" parent="MainNetworkDebug/PanelContainer/MarginContainer/ContentContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Label" type="Label" parent="MainNetworkDebug/PanelContainer/MarginContainer/ContentContainer/StatusWindow"]
+layout_mode = 2
+text = "Status"
