@@ -48,9 +48,144 @@ text = "Network Window"
 layout_mode = 2
 
 [node name="StatusWindow" type="CenterContainer" parent="MainNetworkDebug/PanelContainer/MarginContainer/ContentContainer"]
+visible = false
 layout_mode = 2
 size_flags_vertical = 3
 
 [node name="StatusLabel" type="Label" parent="MainNetworkDebug/PanelContainer/MarginContainer/ContentContainer/StatusWindow"]
 layout_mode = 2
 text = "Status"
+
+[node name="HostPanel" type="PanelContainer" parent="MainNetworkDebug/PanelContainer/MarginContainer/ContentContainer"]
+visible = false
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Container" type="VBoxContainer" parent="MainNetworkDebug/PanelContainer/MarginContainer/ContentContainer/HostPanel"]
+layout_mode = 2
+
+[node name="PortForm" type="VBoxContainer" parent="MainNetworkDebug/PanelContainer/MarginContainer/ContentContainer/HostPanel/Container"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="MainNetworkDebug/PanelContainer/MarginContainer/ContentContainer/HostPanel/Container/PortForm"]
+layout_mode = 2
+text = "Port"
+
+[node name="LineEdit" type="LineEdit" parent="MainNetworkDebug/PanelContainer/MarginContainer/ContentContainer/HostPanel/Container/PortForm"]
+layout_mode = 2
+
+[node name="MaxClientsForm" type="VBoxContainer" parent="MainNetworkDebug/PanelContainer/MarginContainer/ContentContainer/HostPanel/Container"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="MainNetworkDebug/PanelContainer/MarginContainer/ContentContainer/HostPanel/Container/MaxClientsForm"]
+layout_mode = 2
+text = "MaxClients
+"
+
+[node name="LineEdit" type="LineEdit" parent="MainNetworkDebug/PanelContainer/MarginContainer/ContentContainer/HostPanel/Container/MaxClientsForm"]
+layout_mode = 2
+
+[node name="MaxChannelsForm" type="VBoxContainer" parent="MainNetworkDebug/PanelContainer/MarginContainer/ContentContainer/HostPanel/Container"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="MainNetworkDebug/PanelContainer/MarginContainer/ContentContainer/HostPanel/Container/MaxChannelsForm"]
+layout_mode = 2
+text = "MaxChannels
+"
+
+[node name="LineEdit" type="LineEdit" parent="MainNetworkDebug/PanelContainer/MarginContainer/ContentContainer/HostPanel/Container/MaxChannelsForm"]
+layout_mode = 2
+
+[node name="Separator" type="Control" parent="MainNetworkDebug/PanelContainer/MarginContainer/ContentContainer/HostPanel/Container"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="HostBTNContainer" type="HBoxContainer" parent="MainNetworkDebug/PanelContainer/MarginContainer/ContentContainer/HostPanel/Container"]
+layout_mode = 2
+
+[node name="Separator" type="Control" parent="MainNetworkDebug/PanelContainer/MarginContainer/ContentContainer/HostPanel/Container/HostBTNContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Button" type="Button" parent="MainNetworkDebug/PanelContainer/MarginContainer/ContentContainer/HostPanel/Container/HostBTNContainer"]
+layout_mode = 2
+text = "Host"
+
+[node name="Separator2" type="Control" parent="MainNetworkDebug/PanelContainer/MarginContainer/ContentContainer/HostPanel/Container/HostBTNContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="ClientPanel" type="PanelContainer" parent="MainNetworkDebug/PanelContainer/MarginContainer/ContentContainer"]
+visible = false
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Container" type="VBoxContainer" parent="MainNetworkDebug/PanelContainer/MarginContainer/ContentContainer/ClientPanel"]
+layout_mode = 2
+
+[node name="AddressForm" type="VBoxContainer" parent="MainNetworkDebug/PanelContainer/MarginContainer/ContentContainer/ClientPanel/Container"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="MainNetworkDebug/PanelContainer/MarginContainer/ContentContainer/ClientPanel/Container/AddressForm"]
+layout_mode = 2
+text = "Address"
+
+[node name="LineEdit" type="LineEdit" parent="MainNetworkDebug/PanelContainer/MarginContainer/ContentContainer/ClientPanel/Container/AddressForm"]
+layout_mode = 2
+
+[node name="PortForm2" type="VBoxContainer" parent="MainNetworkDebug/PanelContainer/MarginContainer/ContentContainer/ClientPanel/Container"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="MainNetworkDebug/PanelContainer/MarginContainer/ContentContainer/ClientPanel/Container/PortForm2"]
+layout_mode = 2
+text = "Port"
+
+[node name="LineEdit" type="LineEdit" parent="MainNetworkDebug/PanelContainer/MarginContainer/ContentContainer/ClientPanel/Container/PortForm2"]
+layout_mode = 2
+
+[node name="PortForm4" type="VBoxContainer" parent="MainNetworkDebug/PanelContainer/MarginContainer/ContentContainer/ClientPanel/Container"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="MainNetworkDebug/PanelContainer/MarginContainer/ContentContainer/ClientPanel/Container/PortForm4"]
+layout_mode = 2
+text = "Max Channels"
+
+[node name="LineEdit" type="LineEdit" parent="MainNetworkDebug/PanelContainer/MarginContainer/ContentContainer/ClientPanel/Container/PortForm4"]
+layout_mode = 2
+
+[node name="Separator" type="Control" parent="MainNetworkDebug/PanelContainer/MarginContainer/ContentContainer/ClientPanel/Container"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="ConnectBTNContainer" type="HBoxContainer" parent="MainNetworkDebug/PanelContainer/MarginContainer/ContentContainer/ClientPanel/Container"]
+layout_mode = 2
+
+[node name="Separator" type="Control" parent="MainNetworkDebug/PanelContainer/MarginContainer/ContentContainer/ClientPanel/Container/ConnectBTNContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Button" type="Button" parent="MainNetworkDebug/PanelContainer/MarginContainer/ContentContainer/ClientPanel/Container/ConnectBTNContainer"]
+layout_mode = 2
+text = "Connect
+"
+
+[node name="Separator2" type="Control" parent="MainNetworkDebug/PanelContainer/MarginContainer/ContentContainer/ClientPanel/Container/ConnectBTNContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="SessionPanel" type="PanelContainer" parent="MainNetworkDebug/PanelContainer/MarginContainer/ContentContainer"]
+visible = false
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Container" type="VBoxContainer" parent="MainNetworkDebug/PanelContainer/MarginContainer/ContentContainer/SessionPanel"]
+layout_mode = 2
+
+[node name="Separator" type="Control" parent="MainNetworkDebug/PanelContainer/MarginContainer/ContentContainer/SessionPanel/Container"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="DisconnectBTN" type="Button" parent="MainNetworkDebug/PanelContainer/MarginContainer/ContentContainer/SessionPanel/Container"]
+layout_mode = 2
+text = "Disconnect
+"
