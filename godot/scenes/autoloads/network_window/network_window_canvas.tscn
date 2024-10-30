@@ -1,9 +1,9 @@
-[gd_scene load_steps=2 format=3 uid="uid://cl4d11by084jt"]
+[gd_scene load_steps=3 format=3 uid="uid://cl4d11by084jt"]
 
 [ext_resource type="Script" path="res://scripts/autoloads/network_window/network_window_center.gd" id="1_wkatr"]
+[ext_resource type="Script" path="res://scripts/autoloads/network_window/window_tabs_controller.gd" id="2_7sj74"]
 
 [node name="NetworkWindowCanvas" type="CanvasLayer"]
-script = ExtResource("1_wkatr")
 
 [node name="MainNetworkDebug" type="MarginContainer" parent="."]
 anchors_preset = -1
@@ -16,6 +16,7 @@ theme_override_constants/margin_left = 15
 theme_override_constants/margin_top = 15
 theme_override_constants/margin_right = 15
 theme_override_constants/margin_bottom = 15
+script = ExtResource("1_wkatr")
 
 [node name="PanelContainer" type="PanelContainer" parent="MainNetworkDebug"]
 layout_mode = 2
@@ -189,3 +190,10 @@ size_flags_vertical = 3
 layout_mode = 2
 text = "Disconnect
 "
+
+[node name="NetworkWindowLogic" type="Node" parent="."]
+
+[node name="WindowTabsController" type="Node" parent="NetworkWindowLogic" node_paths=PackedStringArray("_tabs_bar", "_tab_windows")]
+script = ExtResource("2_7sj74")
+_tabs_bar = NodePath("../../MainNetworkDebug/PanelContainer/MarginContainer/ContentContainer/ConnectOptions")
+_tab_windows = [NodePath("../../MainNetworkDebug/PanelContainer/MarginContainer/ContentContainer/HostPanel"), NodePath("../../MainNetworkDebug/PanelContainer/MarginContainer/ContentContainer/ClientPanel")]

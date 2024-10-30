@@ -1,4 +1,4 @@
-extends CanvasLayer
+extends MarginContainer
 
 var _is_enabled: bool = false: get = _get_is_enabled, set =_set_is_enabled;
 
