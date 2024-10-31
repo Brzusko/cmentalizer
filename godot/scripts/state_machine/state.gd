@@ -1,6 +1,8 @@
 extends Node;
 class_name State;
 
+signal TransitionRequest(transition_state: State);
+
 @export var transition_states: Array[State];
 
 func _enter() -> void:
@@ -8,6 +10,3 @@ func _enter() -> void:
 
 func _exit() -> void:
 	pass;
-
-func _next_state() -> State:
-	return null;

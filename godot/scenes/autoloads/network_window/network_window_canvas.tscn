@@ -1,7 +1,10 @@
-[gd_scene load_steps=3 format=3 uid="uid://cl4d11by084jt"]
+[gd_scene load_steps=6 format=3 uid="uid://cl4d11by084jt"]
 
 [ext_resource type="Script" path="res://scripts/autoloads/network_window/network_window_center.gd" id="1_wkatr"]
 [ext_resource type="Script" path="res://scripts/autoloads/network_window/window_tabs_controller.gd" id="2_7sj74"]
+[ext_resource type="Script" path="res://scripts/autoloads/network_window/states/NetworkWindowStateMachine.gd" id="3_noa8q"]
+[ext_resource type="Script" path="res://scripts/autoloads/network_window/states/NetworkWindowStateNotConnected.gd" id="4_q37rk"]
+[ext_resource type="Script" path="res://scripts/autoloads/network_window/states/NetworkWindowStateConnected.gd" id="5_mhyok"]
 
 [node name="NetworkWindowCanvas" type="CanvasLayer"]
 
@@ -197,3 +200,15 @@ text = "Disconnect
 script = ExtResource("2_7sj74")
 _tabs_bar = NodePath("../../MainNetworkDebug/PanelContainer/MarginContainer/ContentContainer/ConnectOptions")
 _tab_windows = [NodePath("../../MainNetworkDebug/PanelContainer/MarginContainer/ContentContainer/HostPanel"), NodePath("../../MainNetworkDebug/PanelContainer/MarginContainer/ContentContainer/ClientPanel")]
+
+[node name="NetworkWindowStateMachine" type="Node" parent="NetworkWindowLogic" node_paths=PackedStringArray("_starting_state", "_states")]
+script = ExtResource("3_noa8q")
+_starting_state = NodePath("NotConnected")
+_states = [NodePath("NotConnected"), NodePath("Connected")]
+
+[node name="NotConnected" type="Node" parent="NetworkWindowLogic/NetworkWindowStateMachine" node_paths=PackedStringArray("_windows_tab_controller")]
+script = ExtResource("4_q37rk")
+_windows_tab_controller = NodePath("../../WindowTabsController")
+
+[node name="Connected" type="Node" parent="NetworkWindowLogic/NetworkWindowStateMachine"]
+script = ExtResource("5_mhyok")

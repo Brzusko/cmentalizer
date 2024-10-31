@@ -1,4 +1,5 @@
 extends Node
+class_name NetworkWindowTabsController;
 
 @export var _tabs_bar: TabBar = null;
 @export var _tab_windows: Array[Control];
@@ -29,6 +30,14 @@ func _unlock() -> void:
 func _set_tabs_status(status: bool) -> void:
 	for i: int in _tabs_bar.tab_count:
 		_tabs_bar.set_tab_disabled(i, status);
+
+func _show_current_window_tab() -> void:
+	_show_window_tab(_current_window_selected_index, true);
+
+func _hide_window_tabs() -> void:
+	_current_window_selected_index = -1;
+	for window: Control in _tab_windows:
+		_show_concrete_window(window, false);
 		
 func _show_window_tab(index: int, show: bool) -> void:
 	var window_count: int = _tab_windows.size();
