@@ -3,7 +3,7 @@ use godot::classes::{Resource, IResource};
 use crate::ui::validators::validators_holder::{ValidateResult, ValidatorConstruct, UIValueValidator};
 
 #[derive(GodotClass)]
-#[class(base = Resource, init)]
+#[class(base = Resource, init, tool)]
 pub(crate) struct MinValidatorResource
 {
     base: Base<Resource>,

@@ -3,7 +3,7 @@ use godot::classes::{INode, LineEdit, Node};
 use crate::ui::validators::validators_holder::{ValidateResult, ValidatorsHolder};
 
 #[derive(GodotClass)]
-#[class(base = Node, init)]
+#[class(base = Node, init, tool)]
 pub(crate) struct LineEditValidatorConsumer
 {
     base: Base<Node>,

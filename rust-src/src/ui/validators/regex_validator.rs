@@ -3,7 +3,7 @@ use godot::classes::{Resource, IResource, RegEx, RegExMatch};
 use crate::ui::validators::validators_holder::{UIValueValidator, ValidateResult, ValidatorConstruct};
 
 #[derive(GodotClass)]
-#[class(base = Resource, init)]
+#[class(base = Resource, init, tool)]
 pub(crate) struct RegexValidatorResource
 {
     base: Base<Resource>,

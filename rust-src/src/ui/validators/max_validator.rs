@@ -3,7 +3,7 @@ use godot::classes::{Resource, IResource};
 use crate::ui::validators::validators_holder::{UIValueValidator, ValidateResult, ValidatorConstruct};
 
 #[derive(GodotClass)]
-#[class(base = Resource, init)]
+#[class(base = Resource, init, tool)]
 pub(crate) struct MaxValidatorResource
 {
     base: Base<Resource>,
@@ -44,7 +44,8 @@ impl UIValueValidator for MaxValidator
 {
     fn validate_value(&self, value: &GString) -> ValidateResult
     {
-        if value.len() >= self.max_characters as usize { return ValidateResult::Success; }
+        godot_print!("anrdzej");
+        if value.len() <= self.max_characters as usize { return ValidateResult::Success; }
         if self.revert { ValidateResult::Revert} else { ValidateResult::Failed }
     }
 }

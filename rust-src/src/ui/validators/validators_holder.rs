@@ -25,7 +25,7 @@ pub trait ValidatorConstruct
 }
 
 #[derive(GodotClass)]
-#[class(base = Resource, init)]
+#[class(base = Resource, init, tool)]
 pub(crate) struct ValidatorsHolder
 {
     base: Base<Resource>,
