@@ -1,5 +1,6 @@
 use godot::prelude::*;
 use godot::classes::{INode, Node};
+use crate::ui::validators::{min_validator, max_validator, regex_validator};
 use crate::ui::validators::max_validator::MaxValidatorResource;
 use crate::ui::validators::min_validator::MinValidatorResource;
 use crate::ui::validators::regex_validator::RegexValidatorResource;
@@ -24,10 +25,10 @@ pub trait ValidatorConstruct
 }
 
 #[derive(GodotClass)]
-#[class(base = Node, init)]
+#[class(base = Resource, init)]
 struct ValidatorsHolder
 {
-    base: Base<Node>,
+    base: Base<Resource>,
     validators_collection: Option<Vec<Box<dyn UIValueValidator>>>,
 
     #[export]
@@ -36,15 +37,6 @@ struct ValidatorsHolder
     min_validator_constructors: Array<Gd<MinValidatorResource>>,
     #[export]
     max_validator_constructors: Array<Gd<MaxValidatorResource>>,
-}
-
-#[godot_api]
-impl INode for ValidatorsHolder
-{
-    fn ready(&mut self)
-    {
-        self.fetch_validators_from_resources();
-    }
 }
 
 #[godot_api]
