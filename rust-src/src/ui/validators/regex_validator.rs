@@ -4,7 +4,7 @@ use crate::ui::validators::validators_holder::{UIValueValidator, ValidateResult,
 
 #[derive(GodotClass)]
 #[class(base = Resource, init)]
-struct RegexValidatorResource
+pub(crate) struct RegexValidatorResource
 {
     base: Base<Resource>,
     #[export]
@@ -44,7 +44,7 @@ impl UIValueValidator for RegexValidator
 {
     fn validate_value(&self, value: &GString) -> ValidateResult
     {
-        let search = self.regex.search(&value);
+        let search = self.regex.search(value);
         if search.is_none() { return ValidateResult::Revert }
         ValidateResult::Success
     }

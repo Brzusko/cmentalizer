@@ -4,7 +4,7 @@ use crate::ui::validators::validators_holder::{ValidateResult, ValidatorConstruc
 
 #[derive(GodotClass)]
 #[class(base = Resource, init)]
-struct MinValidatorResource
+pub(crate) struct MinValidatorResource
 {
     base: Base<Resource>,
     #[export]

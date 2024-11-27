@@ -4,7 +4,7 @@ use crate::ui::validators::validators_holder::{UIValueValidator, ValidateResult,
 
 #[derive(GodotClass)]
 #[class(base = Resource, init)]
-struct MaxValidatorResource
+pub(crate) struct MaxValidatorResource
 {
     base: Base<Resource>,
     #[export]
