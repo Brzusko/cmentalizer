@@ -15,7 +15,7 @@ struct MultiClientRunnerMain
 impl IEditorPlugin for MultiClientRunnerMain
 {
     fn enter_tree(&mut self) {
-        let packed_scene_result = try_load::<PackedScene>(GString::from(CONTROL_SCENE_PATH));
+        let packed_scene_result = try_load::<PackedScene>(&GString::from(CONTROL_SCENE_PATH));
         let instance: Option<Gd<Control>>;
         
         match packed_scene_result
@@ -25,7 +25,7 @@ impl IEditorPlugin for MultiClientRunnerMain
         }
         
         let control = instance.unwrap();
-        self.base_mut().add_control_to_bottom_panel(&control, GString::from("Multi Client"));
+        self.base_mut().add_control_to_bottom_panel(&control, &GString::from("Multi Client"));
         
         self.main_control = Some(control);
     }

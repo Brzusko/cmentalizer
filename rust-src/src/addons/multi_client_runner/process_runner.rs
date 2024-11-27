@@ -114,7 +114,7 @@ impl ProcessRunner for WindowsProcessRunner
 {
     fn create_new_process(&mut self, _path: GString, args: PackedStringArray) 
     {
-        let process_id = self.os.create_instance(args);
+        let process_id = self.os.create_instance(&args);
         if process_id == -1 { return; }
         let process = Process::new(process_id);
         self.process_container.add_process(process);
@@ -147,7 +147,7 @@ impl ProcessRunner for MacOSProcessRunner
 {
     fn create_new_process(&mut self, path: GString, args: PackedStringArray)
     {
-        let process_id = self.os.create_process(path, args);
+        let process_id = self.os.create_process(&path, &args);
         if process_id == -1 { return; }
         
         let process = Process::new(process_id);
@@ -178,12 +178,12 @@ impl PlatformRunner
     {
         let os = Self::get_os_singleton();
         
-        if os.has_feature(GString::from("windows"))
+        if os.has_feature(&GString::from("windows"))
         {
             return PlatformRunner::WindowsRunner(WindowsProcessRunner::new());
         }
         
-        if os.has_feature(GString::from("macos"))
+        if os.has_feature(&GString::from("macos"))
         {
             return PlatformRunner::MacOSRunner(MacOSProcessRunner::new());
         }
