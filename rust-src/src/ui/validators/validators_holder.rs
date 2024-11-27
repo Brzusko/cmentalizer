@@ -26,7 +26,7 @@ pub trait ValidatorConstruct
 
 #[derive(GodotClass)]
 #[class(base = Resource, init)]
-struct ValidatorsHolder
+pub(crate) struct ValidatorsHolder
 {
     base: Base<Resource>,
     validators_collection: Option<Vec<Box<dyn UIValueValidator>>>,
@@ -68,7 +68,8 @@ impl ValidatorsHolder
         ValidateResult::Success
     }
 
-    fn fetch_validators_from_resources(&mut self)
+    #[func]
+    pub fn fetch_validators_from_resources(&mut self)
     {
         let min_validators: Vec<Box<dyn UIValueValidator>> = self.min_validator_constructors.iter_shared()
             .map(|min_construct| min_construct.bind().construct_validator()).collect();
