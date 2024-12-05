@@ -26,8 +26,7 @@ checksum = "baf1de4339761588bc0619e3cbc0120ee582ebb74b53b4efbf79117bd2da40fd"
 [[package]]
 name = "gdextension-api"
 version = "0.2.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "af8707eca996b28193b772a4a9a28a97364bb93c97e3c313542e812f2963fb93"
+source = "git+https://github.com/godot-rust/godot4-prebuilt?branch=releases#53fa4a856d93ac01d87deb8f57c6851179dfacec"
 
 [[package]]
 name = "gensym"
@@ -61,8 +60,7 @@ checksum = "779ae4bf7e8421cf91c0b3b64e7e8b40b862fba4d393f59150042de7c4965a94"
 [[package]]
 name = "godot"
 version = "0.2.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f8a90179fdd02c52d3d0ac1fbf724c5cb51391f4e207651d105de12e4bda1b6e"
+source = "git+https://github.com/godot-rust/gdext?branch=master#d32d569ed61ef8427470acdc41e8e708828fe412"
 dependencies = [
  "godot-core",
  "godot-macros",
@@ -71,8 +69,7 @@ dependencies = [
 [[package]]
 name = "godot-bindings"
 version = "0.2.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "4172322f6d35c46c657b3de80900a8bdc8937cff4bc3b8559d47c74eb91f0304"
+source = "git+https://github.com/godot-rust/gdext?branch=master#d32d569ed61ef8427470acdc41e8e708828fe412"
 dependencies = [
  "gdextension-api",
 ]
@@ -80,14 +77,12 @@ dependencies = [
 [[package]]
 name = "godot-cell"
 version = "0.2.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c4f5070ea39cbc64f6b7ed01c752a550999b08b5244aea4f3c4525e51a9f18a1"
+source = "git+https://github.com/godot-rust/gdext?branch=master#d32d569ed61ef8427470acdc41e8e708828fe412"
 
 [[package]]
 name = "godot-codegen"
 version = "0.2.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "22edb4e0e638be594ba199b860290bf092f83d1d166a18d03f75b9d3add66db9"
+source = "git+https://github.com/godot-rust/gdext?branch=master#d32d569ed61ef8427470acdc41e8e708828fe412"
 dependencies = [
  "godot-bindings",
  "heck",
@@ -100,8 +95,7 @@ dependencies = [
 [[package]]
 name = "godot-core"
 version = "0.2.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2111d99582c537ab65666b725697f85d5c9f8630ec7d0b1d2620c0e95e8e7182"
+source = "git+https://github.com/godot-rust/gdext?branch=master#d32d569ed61ef8427470acdc41e8e708828fe412"
 dependencies = [
  "glam",
  "godot-bindings",
@@ -113,8 +107,7 @@ dependencies = [
 [[package]]
 name = "godot-ffi"
 version = "0.2.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "7b01c965bd5189988c7bc7c13ddb02fe4181856ed6a59072ae23029aacce4188"
+source = "git+https://github.com/godot-rust/gdext?branch=master#d32d569ed61ef8427470acdc41e8e708828fe412"
 dependencies = [
  "gensym",
  "godot-bindings",
@@ -126,8 +119,7 @@ dependencies = [
 [[package]]
 name = "godot-macros"
 version = "0.2.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e0be00fe849f158b0f9e330fc54fc5d0f41385c30ea2ed1c59a2d031b3c43726"
+source = "git+https://github.com/godot-rust/gdext?branch=master#d32d569ed61ef8427470acdc41e8e708828fe412"
 dependencies = [
  "godot-bindings",
  "proc-macro2",
