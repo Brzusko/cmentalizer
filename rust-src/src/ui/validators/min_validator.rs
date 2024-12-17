@@ -1,6 +1,6 @@
 use godot::prelude::*;
 use godot::classes::{Resource, IResource};
-use crate::ui::validators::validators_holder::{ValidateResult, ValidatorConstruct, UIValueValidator};
+use crate::ui::validators::validators_holder::ValidatorsAPI::*;
 
 #[derive(GodotClass)]
 #[class(base = Resource, init, tool)]

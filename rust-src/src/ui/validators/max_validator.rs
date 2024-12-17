@@ -44,7 +44,6 @@ impl UIValueValidator for MaxValidator
 {
     fn validate_value(&self, value: &GString) -> ValidateResult
     {
-        godot_print!("anrdzej");
         if value.len() <= self.max_characters as usize { return ValidateResult::Success; }
         if self.revert { ValidateResult::Revert} else { ValidateResult::Failed }
     }
