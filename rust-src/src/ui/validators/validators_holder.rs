@@ -1,16 +1,7 @@
+use std::sync::Mutex;
 use godot::prelude::*;
+use godot::obj::{Gd, DynGd};
 use anyhow::*;
-use crate::ui::validators::max_validator::MaxValidatorResource;
-use crate::ui::validators::min_validator::MinValidatorResource;
-use crate::ui::validators::regex_validator::RegexValidatorResource;
-
-
-pub struct ValidatorErrorData
-{
-
-}
-
-pub enum 
 
 pub trait UIValueValidator
 {
@@ -22,16 +13,28 @@ pub trait UIValueValidator
 pub(crate) struct ValidatorsHolder
 {
     base: Base<Resource>,
-
     #[export]
-    regex_validator_constructors: Array<Gd<RegexValidatorResource>>,
-    #[export]
-    min_validator_constructors: Array<Gd<MinValidatorResource>>,
-    #[export]
-    max_validator_constructors: Array<Gd<MaxValidatorResource>>,
+    godot_validators_reference: VariantArray,
+    validators: Option<Vec<DynGd<Resource, dyn  UIValueValidator>>>,
 }
 
 #[godot_api]
 impl ValidatorsHolder
 {
+    pub fn setup_validators(&mut self)
+    {
+        if self.godot_validators_reference.len() == 0 { return; }
+        let mut validators: Vec<DynGd<Resource, dyn  UIValueValidator>> = vec![];
+        
+        for validator_ref in self.godot_validators_reference.iter_shared() 
+        { 
+            let cast_result = validator_ref.try_to::<DynGd<Resource, dyn UIValueValidator>>();
+            if cast_result.is_err() { continue }
+            
+            let validator = cast_result.unwrap();
+            validators.push(validator);
+        }
+        
+        self.validators = Some(validators);
+    }
 }

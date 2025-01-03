@@ -1,6 +1,6 @@
 use godot::prelude::*;
 use godot::classes::{Resource, IResource};
-use crate::ui::validators::validators_holder::ValidatorsAPI::*;
+use crate::ui::validators::validators_holder;
 
 #[derive(GodotClass)]
 #[class(base = Resource, init, tool)]
@@ -9,14 +9,6 @@ pub(crate) struct MinValidatorResource
     base: Base<Resource>,
     #[export]
     min_characters: i64,
-}
-
-impl ValidatorConstruct for MinValidatorResource
-{
-    fn construct_validator(&self) -> Box<dyn UIValueValidator>
-    {
-        Box::new(MinValidator::new(self.min_characters.clone()))
-    }
 }
 
 struct MinValidator
@@ -33,14 +25,5 @@ impl MinValidator
         {
             min_characters,
         }
-    }
-}
-
-impl UIValueValidator for MinValidator
-{
-    fn validate_value(&self, value: &GString) -> ValidateResult
-    {
-        if value.len() > self.min_characters as usize { return ValidateResult::Success; }
-        ValidateResult::Failed
     }
 }
