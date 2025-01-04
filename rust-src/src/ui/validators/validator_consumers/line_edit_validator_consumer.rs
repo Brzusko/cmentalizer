@@ -1,8 +1,5 @@
-use std::fmt::Debug;
-use std::ops::{Deref, DerefMut};
 use godot::prelude::*;
 use godot::classes::{INode, LineEdit, Node};
-use log::error;
 use crate::ui::validators::ValidationResponse;
 use crate::ui::validators::validators_holder::{ValidatorsHolder};
 
