@@ -10,6 +10,7 @@ crate-type = ["cdylib"]
 godot = { git = "https://github.com/godot-rust/gdext", branch = "master", features = ["experimental-threads"] }
 anyhow = { version = "1.0", default-features = false }
 thiserror = "1.0"
+log = "0.4.22"
 
 [rust]
 debug=true
