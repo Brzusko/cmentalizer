@@ -1,12 +1,7 @@
-use std::sync::Mutex;
 use godot::prelude::*;
-use godot::obj::{Gd, DynGd};
-use anyhow::*;
+use godot::obj::{DynGd};
 
-pub trait UIValueValidator
-{
-    fn validate_value(&self, value: &GString) -> Result<(), GString>;
-}
+use crate::ui::validators::{UIValueValidator, ValidationResponse};
 
 #[derive(GodotClass)]
 #[class(base = Resource, init, tool)]
@@ -15,7 +10,7 @@ pub(crate) struct ValidatorsHolder
     base: Base<Resource>,
     #[export]
     godot_validators_reference: VariantArray,
-    validators: Option<Vec<DynGd<Resource, dyn  UIValueValidator>>>,
+    validators: Option<Vec<DynGd<Resource, dyn UIValueValidator>>>,
 }
 
 #[godot_api]
@@ -24,7 +19,9 @@ impl ValidatorsHolder
     pub fn setup_validators(&mut self)
     {
         if self.godot_validators_reference.len() == 0 { return; }
-        let mut validators: Vec<DynGd<Resource, dyn  UIValueValidator>> = vec![];
+        if self.validators.is_some() { return; }
+
+        let mut validators: Vec<DynGd<Resource, dyn UIValueValidator>> = vec![];
         
         for validator_ref in self.godot_validators_reference.iter_shared() 
         { 
@@ -36,5 +33,10 @@ impl ValidatorsHolder
         }
         
         self.validators = Some(validators);
+    }
+
+    pub fn validate(&self, value: &GString) -> anyhow::Result<(), Vec<ValidationResponse>>
+    {
+        todo!()
     }
 }

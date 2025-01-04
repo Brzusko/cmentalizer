@@ -1,6 +1,6 @@
 use godot::prelude::*;
-use godot::classes::{Resource, IResource};
-use crate::ui::validators::validators_holder::{UIValueValidator};
+use godot::classes::{Resource};
+use crate::ui::validators::{UIValueValidator, ValidationResponse};
 
 #[derive(GodotClass)]
 #[class(base = Resource, init, tool)]
@@ -10,33 +10,26 @@ pub(crate) struct MaxValidatorResource
     #[export]
     max_characters: i64,
     #[export]
+    error_key: GString,
+    #[export]
     revert: bool,
-}
-
-struct MaxValidator
-{
-    max_characters: i64,
-    revert: bool,
-}
-
-
-impl MaxValidator
-{
-    fn new(max_characters: i64, revert: bool) -> Self
-    {
-        Self
-        {
-            max_characters,
-            revert,
-        }
-    }
 }
 
 #[godot_dyn]
 impl UIValueValidator for MaxValidatorResource
 {
-    fn validate_value(&self, value: &GString) -> anyhow::Result<(), GString>
+    fn validate_value(&mut self, _value: &GString) -> anyhow::Result<(), ValidationResponse>
     {
-        todo!()
+        let value_length: i64 = _value.len().try_into().unwrap();
+
+        if value_length > self.max_characters
+        {
+            let error_key = self.error_key.clone();
+
+            if self.revert { return Err(ValidationResponse::Revert(error_key)) }
+            return Err(ValidationResponse::Pass(error_key))
+        }
+
+        Ok(())
     }
 }
