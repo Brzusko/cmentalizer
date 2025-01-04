@@ -1,6 +1,5 @@
 mod addons;
 mod ui;
-mod network;
 
 use godot::prelude::*;
 
