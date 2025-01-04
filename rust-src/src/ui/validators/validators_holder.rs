@@ -1,3 +1,4 @@
+use std::sync::Mutex;
 use godot::prelude::*;
 use godot::obj::{DynGd};
 
@@ -35,8 +36,25 @@ impl ValidatorsHolder
         self.validators = Some(validators);
     }
 
-    pub fn validate(&self, value: &GString) -> anyhow::Result<(), Vec<ValidationResponse>>
+    pub fn validate(&mut self, value: &GString) -> anyhow::Result<(), Vec<ValidationResponse>>
     {
-        todo!()
+        if self.validators.is_none() { return Ok(()) }
+        let validators = self.validators.as_mut().unwrap();
+        if validators.len() == 0 { return Ok(()) }
+        
+        let mut errors: Vec<ValidationResponse> = vec![];
+
+        for validator in validators.iter_mut() 
+        {
+            let mut dyn_validator_ref = validator.dyn_bind_mut();
+            let validation_result = dyn_validator_ref.validate_value(&value);
+            
+            if !validation_result.is_err() { continue; }
+            let error = validation_result.unwrap_err();
+            errors.push(error);
+        }
+        
+        if errors.len() > 0 { return Err(errors); }
+        Ok(())
     }
 }
