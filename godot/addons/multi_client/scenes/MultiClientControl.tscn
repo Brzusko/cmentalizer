@@ -1,19 +1,12 @@
-[gd_scene load_steps=5 format=3 uid="uid://b5t2s5npkujhp"]
+[gd_scene load_steps=3 format=3 uid="uid://b5t2s5npkujhp"]
 
-[sub_resource type="MaxValidatorResource" id="MaxValidatorResource_12nup"]
-max_characters = 2
+[sub_resource type="RegexValidatorResource" id="RegexValidatorResource_4nvnv"]
+pattern = "^-?\\d+$"
+error_key = "dd"
 revert = true
 
-[sub_resource type="MinValidatorResource" id="MinValidatorResource_hnrxx"]
-min_characters = 1
-
-[sub_resource type="RegexValidatorResource" id="RegexValidatorResource_ledb5"]
-pattern = "^[1-9]\\d*$"
-
 [sub_resource type="ValidatorsHolder" id="ValidatorsHolder_bbo3d"]
-regex_validator_constructors = Array[RegexValidatorResource]([SubResource("RegexValidatorResource_ledb5")])
-min_validator_constructors = Array[MinValidatorResource]([SubResource("MinValidatorResource_hnrxx")])
-max_validator_constructors = Array[MaxValidatorResource]([SubResource("MaxValidatorResource_12nup")])
+godot_validators_reference = [SubResource("RegexValidatorResource_4nvnv")]
 
 [node name="MultiClientControl" type="MainMultiClientUI" node_paths=PackedStringArray("clients_line_edit", "spawn_btn", "close_btn")]
 clients_line_edit = NodePath("LineEdit")
