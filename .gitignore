@@ -17,5 +17,6 @@ mono_crash.*.json
 godot/libs/win64/release/*.dll
 godot/libs/win64/debug/*.dll
 godot/libs/macOS_64/release/*.dylib
+godot/libs/linux_x86_64/release/*.so
 
-/libs/macOS_64/debug/*.dylib
+/libs
