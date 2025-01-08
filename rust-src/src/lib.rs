@@ -1,4 +1,5 @@
 mod addons;
+mod gameframework;
 mod ui;
 
 use godot::prelude::*;
