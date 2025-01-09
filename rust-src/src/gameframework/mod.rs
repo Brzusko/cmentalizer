@@ -13,7 +13,7 @@ trait ControlledEntity {
 }
 
 trait PlayerSpawner {
-    fn spawn_player(&mut self, parent: Gd<Node2D>, event_handler: Callable) -> anyhow::Result<()>;
+    fn spawn_player(&mut self, parent: Gd<Node2D>) -> anyhow::Result<DynGd<Node2D, dyn Player>>;
 }
 
 trait GameMode {

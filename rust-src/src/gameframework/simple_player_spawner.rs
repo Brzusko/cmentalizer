@@ -11,19 +11,12 @@ struct SimplePlayerSpawner {
     player_scene: Option<Gd<PackedScene>>,
 }
 
-#[godot_api]
-impl SimplePlayerSpawner {
-    #[signal]
-    fn player_spawned(player_ptr: DynGd<Node2D, dyn Player>) {}
-}
-
 #[godot_dyn]
 impl PlayerSpawner for SimplePlayerSpawner {
     fn spawn_player(
         &mut self,
         mut parent: Gd<Node2D>,
-        event_handler: Callable,
-    ) -> anyhow::Result<()> {
+    ) -> anyhow::Result<DynGd<Node2D, dyn Player>> {
         if self.player_scene.is_none()
             || self.spawn_position.is_none()
             || !parent.is_instance_valid()
@@ -47,10 +40,6 @@ impl PlayerSpawner for SimplePlayerSpawner {
             return Err(anyhow::anyhow!(""));
         }
 
-        {
-            self.base_mut().connect("player_spawned", &event_handler);
-        }
-
         parent.add_child(&player_istance);
         let mut player_ptr = player_ptr_cast.unwrap();
 
@@ -65,12 +54,6 @@ impl PlayerSpawner for SimplePlayerSpawner {
                 .override_state_basic(position, 0.0);
         }
 
-        {
-            let mut base = self.base_mut();
-            base.emit_signal("player_spawned", &[player_istance_var]);
-            base.disconnect("player_spawned", &event_handler);
-        }
-
-        Ok(())
+        Ok(player_ptr)
     }
 }
