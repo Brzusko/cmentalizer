@@ -9,7 +9,7 @@ trait Player {
 trait ControlledEntity {
     fn apply_vertical_input(&mut self, input: Vector2);
     fn apply_aim_offset(&mut self, aim_offset: Vector2);
-    fn override_state_basic(&mut self, new_position: Vector2, new_rotation: f64);
+    fn override_state_basic(&mut self, new_position: Vector2, new_rotation: f32);
 }
 
 trait PlayerSpawner {
@@ -21,5 +21,7 @@ trait GameMode {
     fn initialize(&mut self) -> anyhow::Result<(), GString>;
 }
 
+pub(crate) mod player_body_controller;
+pub(crate) mod player_entity;
 pub(crate) mod simple_player_spawner;
 pub(crate) mod test_gamemode;
