@@ -7,7 +7,9 @@ use crate::gameframework::{Player, PlayerSpawner};
 #[class(base = Node, init)]
 struct SimplePlayerSpawner {
     base: Base<Node>,
+    #[export]
     spawn_position: Option<Gd<Marker2D>>,
+    #[export]
     player_scene: Option<Gd<PackedScene>>,
 }
 

@@ -49,7 +49,7 @@ impl GameMode for TestGameMode {
             return Err(GString::from("GameMode - world reference is missing!"));
         }
 
-        if self.spawner_ptr.is_none() {
+        if self.spawner_reference.is_none() {
             return Err(GString::from(
                 "GameMode - player spawner reference is missing!",
             ));
