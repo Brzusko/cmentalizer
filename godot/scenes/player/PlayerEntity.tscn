@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://dl7h1gvx4f35b"]
+
+[ext_resource type="PackedScene" uid="uid://dt0qppexgr3yi" path="res://scenes/player/character_body/player_body_controller.tscn" id="1_dk17m"]
+
+[node name="PlayerEntity" type="PlayerEntity" node_paths=PackedStringArray("body_controller_reference")]
+body_controller_reference = NodePath("PlayerBodyController")
+
+[node name="PlayerBodyController" parent="." instance=ExtResource("1_dk17m")]
