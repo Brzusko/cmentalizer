@@ -1,7 +1,10 @@
-use super::GameMode;
+use crate::gameframework::game_input::InputProvider;
+use crate::gameframework::GameMode;
 use crate::gameframework::{Player, PlayerSpawner};
 use godot::classes::{INode, Node};
 use godot::prelude::*;
+
+use super::InputData;
 
 #[derive(GodotClass)]
 #[class(base = Node, init)]
@@ -11,6 +14,8 @@ struct TestGameMode {
     spawner_reference: Option<Gd<Node>>,
     #[export]
     world: Option<Gd<Node2D>>,
+    #[export]
+    input_provider: Option<Gd<InputProvider>>,
     spawner_ptr: Option<DynGd<Node, dyn PlayerSpawner>>,
     player_ptr: Option<DynGd<Node2D, dyn Player>>,
 }
@@ -40,6 +45,14 @@ impl INode for TestGameMode {
     }
 }
 
+#[godot_api]
+impl TestGameMode {
+    #[func]
+    fn on_input_changed(&mut self, input_data: InputData) {
+        godot_print!("{:?}", input_data);
+    }
+}
+
 #[godot_dyn]
 impl GameMode for TestGameMode {
     fn initialize(&mut self) -> anyhow::Result<(), GString> {
@@ -63,11 +76,23 @@ impl GameMode for TestGameMode {
 
             if let Err(_) = spawner_cast {
                 return Err(GString::from(
-                    "GameMode - could not grab spawner interface pointer.",
+                    "GameMode - could not grab spawner interface pointer!",
                 ));
             }
 
             self.spawner_ptr = Some(spawner_cast.unwrap());
+        }
+
+        if self.input_provider.is_none() {
+            return Err(GString::from(
+                "GameMode - input provider reference is missing!",
+            ));
+        }
+
+        {
+            let input_callback = self.base().callable("on_input_changed");
+            let input_provider = self.input_provider.as_mut().unwrap();
+            input_provider.connect("input_changed", &input_callback);
         }
 
         Ok(())

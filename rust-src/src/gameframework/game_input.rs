@@ -25,16 +25,16 @@ impl ToGodot for InputData {
 
         //encoding should not return Error because, PackedByteArray has enough space
         //movement_input
-        _ = bytes.encode_float(0, self.movement_input.x); // 0 - 3 # 4
-        _ = bytes.encode_float(float_offset, self.movement_input.y); // 4 - 7 #
+        _ = bytes.encode_float(0, self.movement_input.x);
+        _ = bytes.encode_float(float_offset, self.movement_input.y);
 
         //mouse_screen_position
-        _ = bytes.encode_float(float_offset * 2, self.mouse_screen_position.x); // 8 - 11
-        _ = bytes.encode_float(float_offset * 3, self.mouse_screen_position.y); // 12 - 15
+        _ = bytes.encode_float(float_offset * 2, self.mouse_screen_position.x);
+        _ = bytes.encode_float(float_offset * 3, self.mouse_screen_position.y);
 
         //mouse_screen_delta_position
-        _ = bytes.encode_float(float_offset * 4, self.mouse_screen_delta_position.x); // 16 - 19
-        _ = bytes.encode_float(float_offset * 5, self.mouse_screen_delta_position.y); // 20 - 23
+        _ = bytes.encode_float(float_offset * 4, self.mouse_screen_delta_position.x);
+        _ = bytes.encode_float(float_offset * 5, self.mouse_screen_delta_position.y);
 
         bytes
     }
@@ -47,9 +47,6 @@ impl ToGodot for InputData {
 impl FromGodot for InputData {
     fn try_from_godot(via: Self::Via) -> Result<Self, ConvertError> {
         let bytes_needed = size_of::<InputData>();
-
-        godot_print!("{:?}", bytes_needed);
-        godot_print!("{:?}", via.len());
 
         if bytes_needed != via.len() {
             return Err(ConvertError::new(
@@ -142,6 +139,15 @@ pub(crate) struct InputProvider {
 impl INode for InputProvider {
     fn input(&mut self, event: Gd<InputEvent>) {
         if self.is_movement_action(&event) {
+            let movement_vector = Input::singleton().get_vector(
+                &self.left_input_name,
+                &self.get_right_input_name(),
+                &self.up_input_name,
+                &self.down_input_name,
+            );
+
+            self.cached_input_data.movement_input = movement_vector;
+
             self.trigger_input_signal();
         }
     }
