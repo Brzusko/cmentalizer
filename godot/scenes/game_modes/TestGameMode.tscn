@@ -3,9 +3,16 @@
 [ext_resource type="PackedScene" uid="uid://btqtcghmuqno4" path="res://scenes/worlds/test_wold/TestWorld.tscn" id="1_hf7re"]
 [ext_resource type="PackedScene" uid="uid://dl7h1gvx4f35b" path="res://scenes/player/PlayerEntity.tscn" id="2_w0iio"]
 
-[node name="TestGameMode" type="TestGameMode" node_paths=PackedStringArray("spawner_reference", "world")]
+[node name="TestGameMode" type="TestGameMode" node_paths=PackedStringArray("spawner_reference", "world", "input_provider")]
 spawner_reference = NodePath("SimplePlayerSpawner")
 world = NodePath("TestWorld")
+input_provider = NodePath("InputProvider")
+
+[node name="InputProvider" type="InputProvider" parent="."]
+up_input_name = &"up"
+down_input_name = &"down"
+left_input_name = &"left"
+right_input_name = &"right"
 
 [node name="TestWorld" parent="." instance=ExtResource("1_hf7re")]
 
@@ -17,3 +24,4 @@ player_scene = ExtResource("2_w0iio")
 position = Vector2(119, 124)
 
 [node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(222, 155)
