@@ -1,9 +1,7 @@
+use super::GameMode;
 use crate::gameframework::{Player, PlayerSpawner};
 use godot::classes::{INode, Node};
 use godot::prelude::*;
-use std::mem;
-
-use super::{GameMode, InputData};
 
 #[derive(GodotClass)]
 #[class(base = Node, init)]

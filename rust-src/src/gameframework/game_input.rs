@@ -8,6 +8,7 @@ pub(crate) struct InputData {
     pub(crate) mouse_screen_delta_position: Vector2,
 }
 
+// Convert signal into Rust events implementataion if performance will be bad
 // TODO simplify serialization/deserialization
 impl GodotConvert for InputData {
     type Via = PackedByteArray;
@@ -37,6 +38,10 @@ impl ToGodot for InputData {
 
         bytes
     }
+
+    fn to_variant(&self) -> Variant {
+        self.to_godot().to_variant()
+    }
 }
 
 impl FromGodot for InputData {
@@ -54,14 +59,28 @@ impl FromGodot for InputData {
 
         let float_offset = size_of::<f32>();
 
-        let movement_x = via.decode_float(0).unwrap();
-        let movement_y = via.decode_float(float_offset).unwrap();
+        let float_decoding_error_message = "Float decoding failed";
 
-        let mouse_x = via.decode_float(float_offset * 2).unwrap();
-        let mouse_y = via.decode_float(float_offset * 3).unwrap();
+        let movement_x = via
+            .decode_float(0)
+            .map_err(|_| ConvertError::new(float_decoding_error_message))?;
+        let movement_y = via
+            .decode_float(float_offset)
+            .map_err(|_| ConvertError::new(float_decoding_error_message))?;
 
-        let mouse_delta_x = via.decode_float(float_offset * 4).unwrap();
-        let mouse_delta_y = via.decode_float(float_offset * 5).unwrap();
+        let mouse_x = via
+            .decode_float(float_offset * 2)
+            .map_err(|_| ConvertError::new(float_decoding_error_message))?;
+        let mouse_y = via
+            .decode_float(float_offset * 3)
+            .map_err(|_| ConvertError::new(float_decoding_error_message))?;
+
+        let mouse_delta_x = via
+            .decode_float(float_offset * 4)
+            .map_err(|_| ConvertError::new(float_decoding_error_message))?;
+        let mouse_delta_y = via
+            .decode_float(float_offset * 5)
+            .map_err(|_| ConvertError::new(float_decoding_error_message))?;
 
         Ok(Self {
             movement_input: Vector2::new(movement_x, movement_y),
@@ -69,11 +88,44 @@ impl FromGodot for InputData {
             mouse_screen_delta_position: Vector2::new(mouse_delta_x, mouse_delta_y),
         })
     }
+
+    fn from_godot(via: Self::Via) -> Self {
+        let float_offset = size_of::<f32>();
+
+        let movement_x = via.decode_float(0).unwrap_or_default();
+        let movement_y = via.decode_float(float_offset).unwrap_or_default();
+
+        let mouse_x = via.decode_float(float_offset * 2).unwrap_or_default();
+        let mouse_y = via.decode_float(float_offset * 3).unwrap_or_default();
+
+        let mouse_delta_x = via.decode_float(float_offset * 4).unwrap_or_default();
+        let mouse_delta_y = via.decode_float(float_offset * 5).unwrap_or_default();
+
+        Self {
+            movement_input: Vector2::new(movement_x, movement_y),
+            mouse_screen_position: Vector2::new(mouse_x, mouse_y),
+            mouse_screen_delta_position: Vector2::new(mouse_delta_x, mouse_delta_y),
+        }
+    }
+    fn try_from_variant(variant: &Variant) -> Result<Self, ConvertError> {
+        let byte_array_convert = variant.try_to::<PackedByteArray>()?;
+        FromGodot::try_from_godot(byte_array_convert)
+    }
+    fn from_variant(variant: &Variant) -> Self {
+        let byte_array_convert_result = variant.try_to::<PackedByteArray>();
+
+        match byte_array_convert_result {
+            Ok(byte_array) => FromGodot::from_godot(byte_array),
+            Err(_) => Self::default(),
+        }
+    }
 }
 
 #[derive(GodotClass)]
 #[class(base = Node, init)]
 pub(crate) struct InputProvider {
+    base: Base<Node>,
+
     #[export]
     up_input_name: StringName,
     #[export]
@@ -107,7 +159,8 @@ impl InputProvider {
             || event.is_action(&self.right_input_name)
     }
 
-    fn trigger_input_signal(&self) {
-        todo!()
+    fn trigger_input_signal(&mut self) {
+        let signal_arg = self.cached_input_data.to_variant();
+        self.base_mut().emit_signal("input_changed", &[signal_arg]);
     }
 }
