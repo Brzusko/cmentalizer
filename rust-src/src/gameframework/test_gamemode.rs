@@ -1,10 +1,6 @@
-use crate::gameframework::game_input::InputProvider;
-use crate::gameframework::GameMode;
-use crate::gameframework::{Player, PlayerSpawner};
+use crate::gameframework::{EntityController, GameMode, Player, PlayerSpawner};
 use godot::classes::{INode, Node};
 use godot::prelude::*;
-
-use super::InputData;
 
 #[derive(GodotClass)]
 #[class(base = Node, init)]
@@ -15,9 +11,11 @@ struct TestGameMode {
     #[export]
     world: Option<Gd<Node2D>>,
     #[export]
-    input_provider: Option<Gd<InputProvider>>,
+    player_controller_reference: Option<Gd<Node>>,
+
     spawner_ptr: Option<DynGd<Node, dyn PlayerSpawner>>,
     player_ptr: Option<DynGd<Node2D, dyn Player>>,
+    player_controller_ptr: Option<DynGd<Node, dyn EntityController>>,
 }
 
 #[godot_api]
@@ -41,15 +39,17 @@ impl INode for TestGameMode {
             return;
         }
 
-        self.player_ptr = Some(player_spawn_result.unwrap());
-    }
-}
+        let player_ptr = player_spawn_result.unwrap();
 
-#[godot_api]
-impl TestGameMode {
-    #[func]
-    fn on_input_changed(&mut self, input_data: InputData) {
-        godot_print!("{:?}", input_data);
+        {
+            let player_ptr_dyn = player_ptr.dyn_bind();
+
+            let mut player_controller_ptr =
+                self.player_controller_ptr.as_mut().unwrap().dyn_bind_mut();
+            player_controller_ptr.take_controll(player_ptr_dyn.get_controlled_entity());
+        }
+
+        self.player_ptr = Some(player_ptr);
     }
 }
 
@@ -83,16 +83,26 @@ impl GameMode for TestGameMode {
             self.spawner_ptr = Some(spawner_cast.unwrap());
         }
 
-        if self.input_provider.is_none() {
+        if self.player_controller_reference.is_none() {
             return Err(GString::from(
-                "GameMode - input provider reference is missing!",
+                "GameMode - player controller reference is missing!",
             ));
         }
 
         {
-            let input_callback = self.base().callable("on_input_changed");
-            let input_provider = self.input_provider.as_mut().unwrap();
-            input_provider.connect("input_changed", &input_callback);
+            let player_controller_cast_result = self
+                .player_controller_reference
+                .as_ref()
+                .unwrap()
+                .to_variant()
+                .try_to::<DynGd<Node, dyn EntityController>>();
+
+            if player_controller_cast_result.is_err() {
+                return Err(GString::from("GameMode - could not receive entity controller trait from player controller reference!"));
+            }
+
+            let player_controller_ptr = player_controller_cast_result.unwrap();
+            self.player_controller_ptr = Some(player_controller_ptr);
         }
 
         Ok(())
