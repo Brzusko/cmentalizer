@@ -13,6 +13,8 @@ up_input_name = &"up"
 down_input_name = &"down"
 left_input_name = &"left"
 right_input_name = &"right"
+exit_input_name = &"exit"
+primary_input_name = &"primary_action"
 
 [node name="TestWorld" parent="." instance=ExtResource("1_hf7re")]
 
