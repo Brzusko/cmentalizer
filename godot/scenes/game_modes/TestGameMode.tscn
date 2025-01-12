@@ -3,10 +3,13 @@
 [ext_resource type="PackedScene" uid="uid://btqtcghmuqno4" path="res://scenes/worlds/test_wold/TestWorld.tscn" id="1_hf7re"]
 [ext_resource type="PackedScene" uid="uid://dl7h1gvx4f35b" path="res://scenes/player/PlayerEntity.tscn" id="2_w0iio"]
 
-[node name="TestGameMode" type="TestGameMode" node_paths=PackedStringArray("spawner_reference", "world", "input_provider")]
+[node name="TestGameMode" type="TestGameMode" node_paths=PackedStringArray("spawner_reference", "world", "player_controller_reference")]
 spawner_reference = NodePath("SimplePlayerSpawner")
 world = NodePath("TestWorld")
-input_provider = NodePath("InputProvider")
+player_controller_reference = NodePath("PlayerController")
+
+[node name="PlayerController" type="PlayerController" parent="." node_paths=PackedStringArray("input_provider")]
+input_provider = NodePath("../InputProvider")
 
 [node name="InputProvider" type="InputProvider" parent="."]
 up_input_name = &"up"
