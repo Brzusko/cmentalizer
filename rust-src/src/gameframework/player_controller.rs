@@ -3,6 +3,8 @@ use crate::gameframework::{ControlledEntity, EntityController};
 use godot::classes::{INode, Node};
 use godot::prelude::*;
 
+use super::EntityInput;
+
 #[derive(GodotClass)]
 #[class(base = Node, init)]
 struct PlayerController {
@@ -10,7 +12,6 @@ struct PlayerController {
     #[export]
     input_provider: Option<Gd<InputProvider>>,
     controlled_entity: Option<DynGd<Node2D, dyn ControlledEntity>>,
-    cached_input_data: InputData,
 }
 
 #[godot_api]
@@ -32,12 +33,9 @@ impl PlayerController {
             return;
         }
 
-        self.cached_input_data = input_data;
-        let vertical_input = self.cached_input_data.movement_input;
-        let aim_offset = self.cached_input_data.mouse_global_position;
         let mut controllerd_entity_ptr = self.controlled_entity.as_mut().unwrap().dyn_bind_mut();
-        controllerd_entity_ptr.apply_vertical_input(vertical_input);
-        controllerd_entity_ptr.apply_aim_offset(aim_offset);
+        let entity_data = EntityInput::Player(input_data);
+        controllerd_entity_ptr.process_input(entity_data);
     }
 }
 

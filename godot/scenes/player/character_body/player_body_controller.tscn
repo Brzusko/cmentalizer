@@ -5,9 +5,14 @@
 [sub_resource type="CircleShape2D" id="CircleShape2D_vhmbr"]
 radius = 35.0
 
-[node name="PlayerBodyController" type="PlayerBodyController"]
+[node name="PlayerBodyController" type="PlayerBodyController" node_paths=PackedStringArray("player_camera")]
+player_camera = NodePath("CameraHolder/PlayerCamera")
 
 [node name="Visuals" parent="." instance=ExtResource("1_tau8e")]
 
 [node name="BodyShape" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_vhmbr")
+
+[node name="CameraHolder" type="Node2D" parent="."]
+
+[node name="PlayerCamera" type="Camera2D" parent="CameraHolder"]

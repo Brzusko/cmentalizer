@@ -2,18 +2,22 @@ use godot::builtin::GString;
 use godot::classes::Node2D;
 use godot::prelude::{DynGd, Gd, Vector2};
 
-use game_input::InputData;
+use crate::gameframework::game_input::InputData;
 
 trait Player {
     fn get_controlled_entity(&self) -> DynGd<Node2D, dyn ControlledEntity>;
 }
 
 trait ControlledEntity {
-    fn apply_vertical_input(&mut self, input: Vector2);
-    fn apply_aim_offset(&mut self, aim_offset: Vector2);
+    fn process_input(&mut self, input: EntityInput);
     fn override_state_basic(&mut self, new_position: Vector2, new_rotation: f32);
     fn getting_controlled(&mut self);
     fn revoking_controll(&mut self);
+    fn is_controlled(&self) -> bool;
+}
+
+pub(crate) enum EntityInput {
+    Player(InputData),
 }
 
 trait EntityController {
@@ -25,7 +29,6 @@ trait PlayerSpawner {
 }
 
 trait GameMode {
-    // maybe generic data?
     fn initialize(&mut self) -> anyhow::Result<(), GString>;
 }
 

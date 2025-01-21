@@ -3,20 +3,25 @@ use godot::prelude::*;
 
 use crate::gameframework::ControlledEntity;
 
+use super::{EntityInput, InputData};
+
 #[derive(GodotClass)]
 #[class(base = CharacterBody2D, init)]
 struct PlayerBodyController {
     base: Base<CharacterBody2D>,
+    #[export]
+    player_camera: Option<Gd<Camera2D>>,
+    is_controlled: bool,
 }
 
 #[godot_dyn]
 impl ControlledEntity for PlayerBodyController {
-    fn apply_vertical_input(&mut self, input: Vector2) {
-        godot_print!("{:?}", input);
+    fn process_input(&mut self, input: EntityInput) {
+        match input {
+            EntityInput::Player(input_data) => godot_print!("{:?}", input_data),
+        }
     }
-    fn apply_aim_offset(&mut self, aim_offset: Vector2) {
-        godot_print!("{:?}", aim_offset);
-    }
+
     fn override_state_basic(&mut self, new_position: Vector2, new_rotation: f32) {
         let mut base_mut = self.base_mut();
 
@@ -25,10 +30,16 @@ impl ControlledEntity for PlayerBodyController {
     }
 
     fn getting_controlled(&mut self) {
-        godot_print!("Controlled!");
+        self.is_controlled = true;
+        let camera = self.player_camera.as_mut().unwrap();
+        camera.make_current();
     }
 
     fn revoking_controll(&mut self) {
-        godot_print!("Not Controlled");
+        self.is_controlled = false;
+    }
+
+    fn is_controlled(&self) -> bool {
+        self.is_controlled
     }
 }
