@@ -33,6 +33,7 @@ trait GameMode {
 }
 
 pub(crate) mod game_input;
+pub(crate) mod game_stats;
 pub(crate) mod player_body_controller;
 pub(crate) mod player_controller;
 pub(crate) mod player_entity;
